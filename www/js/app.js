@@ -258,8 +258,8 @@ var player = {
         'use strict';
 
         var s = new Image();
-        var newX = this.x += this.dx;
-        var newY = this.y += this.dy;
+        var newX = this.x += this.dx/3;
+        var newY = this.y += this.dy/3;
         var tempScore, score;
 
         context.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -325,3 +325,6 @@ window.addEventListener('load', function() {
     'use strict';
     init();
 }, false);
+
+
+
