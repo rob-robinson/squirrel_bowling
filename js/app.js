@@ -301,7 +301,7 @@ var player = {
                 score = 5;
             }
 
-            document.getElementById("score").innerHTML = "Landed on : " + this.x + " TempScore : " + tempScore + " Score : " + score;
+            document.getElementById("score").innerHTML = "Landed on : " + parseInt(this.x) + " TempScore : " + parseInt(tempScore) + " Score : " + score;
             // perfect is 432:
             // score is Math.abs(432-this.x)
         }
