@@ -26,6 +26,8 @@ var releaseX,releaseY;
 
 // event delegates
 
+
+
 function onMouseMove(evt) {
     'use strict';
     evt.preventDefault();
@@ -137,119 +139,55 @@ function init() {
     }, 1 / FPS);
 }
 
-var c = [
+
+var game = {
+  tempScore:0,
+  score:0
+};
+
+var coordinates = [
     {x:160,y:160},
     {x:140,y:140},
     {x:180,y:140},
     {x:120,y:120},
     {x:160,y:120},
-    {x:180,y:120},
+    {x:200,y:120},
     {x:100,y:100},
     {x:140,y:100},
     {x:180,y:100},
     {x:220,y:100}
 ];
 
-var pins = [
-    {   id:1,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
+var pinImage = new Image();
+pinImage.src = "img/pin.png";
 
-    {   id:2,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
-    {   id:3,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
+var pins = [];
 
-    {   id:4,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
-    {   id:5,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
-    {   id:6,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
+for(var i=0; i<=9; i+=1){
+  pins.push(
+    {
+      x:coordinates[i].x+300,
+      y:coordinates[i].y-30,
+      width:40,
+      height:114,
 
-    {   id:7,
         status:1,
-        coordinates:c[this.id-1],
         draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
-    {   id:8,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
-    {   id:9,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
-        }
-    },
-    {   id:10,
-        status:1,
-        coordinates:c[this.id-1],
-        draw: function(){
-            var s = new Image();
-            s.src = "img/pin.png";
-            context.drawImage(s, this.coordinates.x, this.coordinates.y, 30, 120);
+            context.drawImage(pinImage, this.x, this.y, this.width, this.height);
         }
     }
-];
-console.log(pins);
+  );
+}
+
+var squirrelImage = new Image();
+squirrelImage.src = "img/home_page_squirrel1.png";
+
 var player = {
     color: "#00A",
     x: 1024 / 2, // start point ... center
     y: 700 / 2, // start point ... center
+    newX:this.x,
+    newY:this.y,
     dx: 0, // amt to accelerate by -- horizontal
     dy: 0, // amt to accelerate by -- vertical
     width: 20,
@@ -257,66 +195,77 @@ var player = {
     draw: function () {
         'use strict';
 
-        var s = new Image();
-        var newX = this.x += this.dx/3;
-        var newY = this.y += this.dy/3;
-        var tempScore, score;
 
-        context.clearRect(0, 0, canvasWidth, canvasHeight);
+        this.newX = this.x += this.dx/3;
+        this.newY = this.y += this.dy/3;
 
-        s.src = "img/home_page_squirrel2.png";
-        context.drawImage(s, this.x, this.y, 80, 60);
-
-        if (newX >= (canvasWidth - 128)) {
-            newX = 0;
-        }
-        if (newX < 0) {
-            newX = (canvasWidth - 128);
-        }
-        if (newY >= (canvasHeight - 100)) {
-            newY = 0;
+        if(this.dx == 0 && this.dy == 0){
+          squirrelImage.src = "img/home_page_squirrel1.png";
+        } else {
+          squirrelImage.src = "img/home_page_squirrel2.png";
         }
 
-        // scoring hacks...
-        if (newY < 80) {
-            newY = 550;
-            newX = 550;
-            this.dy = 0;
+        context.drawImage(squirrelImage, this.x, this.y, 100, 100);
+
+        if (this.newX >= (canvasWidth - 200)) {
+          this.newY = this.y;
+          this.newX = this.x;
+          this.dx = 0;
+          this.dy = 0;
+        } else
+        if (this.newX <= 0) {
+          this.newY = this.y;
+          this.newX = this.x;
+          this.dx = 0;
+          this.dy = 0;
+        } else
+        if (this.newY >= (canvasHeight - 100)) {
+          this.newY = this.y;
+          this.newX = this.x;
+          this.dx = 0;
+          this.dy = 0;
+        } else
+        if (this.newY <= 55) {
+            this.newY = this.y;
+            this.newX = this.x;
             this.dx = 0;
+            this.dy = 0;
+        }
 
-            tempScore = Math.abs(432 - this.x);
-            score = 0;
 
-            if (tempScore < 2.5) {
-                score = 10;
-            } else if (tempScore < 15) {
-                score = 9;
-            } else if (tempScore < 25) {
-                score = 8;
-            } else if (tempScore < 35) {
-                score = 7;
-            } else if (tempScore < 45) {
-                score = 6;
-            } else if (tempScore < 55) {
-                score = 5;
-            }
-
-            document.getElementById("score").innerHTML = "Landed on : " + parseInt(this.x) + " TempScore : " + parseInt(tempScore) + " Score : " + score;
+        document.getElementById("score").innerHTML = "Landed on : " + parseInt(this.x) + " TempScore : " + parseInt(game.tempScore) + " Score : " + game.score;
             // perfect is 432:
             // score is Math.abs(432-this.x)
-        }
 
-        this.x = newX;
-        this.y = newY;
+
+        this.x = this.newX;
+        this.y = this.newY;
     } // end draw
 };
 
 function draw(){
     'use strict';
-    player.draw();
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
     for(var i=pins.length-1;i>=0; i-=1){
+
+
+      if (pins[i].x < player.x + player.width &&
+         pins[i].x + pins[i].width > player.x &&
+         pins[i].y < player.y + player.height &&
+         pins[i].height + pins[i].y > player.y &&
+       pins[i].status == 1 ) {
+          // collision detected!
+          pins[i].status = 0;
+
+          game.score += 1;
+      }
+      if(pins[i].status == 1){
         pins[i].draw();
+      }
+
     }
+
+    player.draw();
 
 }
 
@@ -325,6 +274,3 @@ window.addEventListener('load', function() {
     'use strict';
     init();
 }, false);
-
-
-
