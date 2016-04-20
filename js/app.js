@@ -207,13 +207,13 @@ var player = {
 
         context.drawImage(squirrelImage, this.x, this.y, 100, 100);
 
-        if (this.newX >= (canvasWidth - 200)) {
+        if (this.newX >= (canvasWidth - 350)) {
           this.newY = this.y;
           this.newX = this.x;
           this.dx = 0;
           this.dy = 0;
         } else
-        if (this.newX <= 0) {
+        if (this.newX <= 220) {
           this.newY = this.y;
           this.newX = this.x;
           this.dx = 0;
